@@ -1,0 +1,67 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+#piano{
+  width:900px;
+  height:400px;
+  padding-left:5px;
+  padding-right:5px;
+}
+
+.wkey{
+  background-color:white;
+  width:70px;
+  height:400px;
+  border:1px solid black;
+  float:left;
+  border-left:3px outset;
+  border-right:3px outset;
+  border-bottom:3px outset;
+}
+
+.wkey:hover{
+  background-color:#c1c0c0;
+}
+
+.bkey{
+  background-color:black;
+  width:40px;
+  height:250px;
+  float:left;
+  border-left:3px outset;
+  border-right:3px outset;
+  border-bottom:3px outset;
+  border-left:3px outset;
+  border-right:3px outset;
+  border-bottom:3px outset;
+  margin-right:30px;
+}
+
+.bkey:hover{
+  background-color:#3d3b3b;
+}
+
+#blackkeys{
+  position:absolute;
+  width:900px;
+}
+
+.blacks2{
+  width:172px;
+  padding-left:50px;
+  float:left;
+}
+
+.blacks3{
+  padding-left:50px;
+  width:250px;
+  float:left;
+  float:left;
+}
+
