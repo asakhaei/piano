@@ -36,7 +36,7 @@ app.get('/piano', routes.piano);
 io.sockets.on('connection', function(socket) {
   socket.on('note', function(msg) {
     console.log("got msg " + msg.note);
-    socket.emit('note', msg);
+    socket.broadcast.emit('note', msg);
   });
 });
 

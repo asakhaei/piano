@@ -3,7 +3,28 @@
 
 //** Usage: Instantiate script by calling: var uniquevar=createsoundbite("soundfile1", "fallbackfile2", "fallebacksound3", etc)
 //** Call: uniquevar.playclip() to play sound
+
 $(function() {
+// Local variables
+var notes = {}; // map of note names to notes, e.g. {c4: {...}, d4: {...},...}
+var keyBindings = {}; // map of keys to notes, e.g. {'a': {...},...}
+var server = "http://localhost";
+var socket = io.connect(server);
+
+$(".wkey").addClass("key");
+$(".bkey").addClass("key");
+$(".key").each(function(index, key) {
+  key.note = $(key).attr('id');
+  $(key).click(function(e) {
+    handleNoteHit(notes[this.note]);
+  });
+});
+
+socket.on('note', function(msg) {
+  console.log('received ' + msg.note);
+  notes[msg.note].sound.playclip();
+});
+
 var html5_audiotypes={ //define list of audio file extensions and their associated audio types. Add to it if your specified audio file isn't on this list:
 	"mp3": "audio/mpeg",
 	"mp4": "audio/mp4",
@@ -41,7 +62,7 @@ function Note(note) {
   this.note = note;
 }
 
-var notes4 = "c d e f g a b cs ds fs as bs".split(" ");
+var notes4 = "c d e f g a b cs ds fs gs as".split(" ");
 var notes5 = "c d e cs ds".split(" ");
 notes4 = notes4.map(function(elt) {
     return elt + "4";
@@ -50,69 +71,46 @@ notes5 = notes5.map(function(elt) {
     return elt + "5";
 });
 var noteNames = notes4.concat(notes5);
-var notes = {};
-var keyBindings = {};
 noteNames.forEach(function(note) {
     noteObj = new Note(note);
     noteObj.sound = createsoundbite("/piano notes/" + note + ".mp3");
     notes[note] = noteObj;
 });
 
-var keys = [97,115,100,102,103,104,106,107,108,59,119,101,116,121,117,111,112];
+var keys4 = ['a','s','d','f','g','h','j',   'w','e','t','y','u']
+  , keys5 = ['k','l',';',                   'o','p'];
+var keys = keys4.concat(keys5);
 keys.forEach(function(key, index) {
     keyBindings[key] = notes[noteNames[index]];
 });
 
-var whiteEl = document.getElementsByClassName("wkey");
-var blackEl = document.getElementsByClassName("bkey");
-var position = 0;
-document.onkeydown=function(e){
-	var e=window.event || e
-	var color = 0;
-  if(keyBindings(e.charCode)){
-    color = 1;
-    position = k;
-    break;
+$("body").keyup(function(e) {
+  var note = getNoteFromEvent(e);
+  if(note){
+    $("#"+note.note).removeClass("keydown");
+	}
+});
+
+$("body").keydown(function(e) {
+  var note = getNoteFromEvent(e);
+  if (note) {
+    handleNoteHit(note);
+		$("#"+note.note).addClass("keydown");
   }
-	if(color == 1) {
-		soundsWhite[position].playclip();
-		whiteEl[position].style.backgroundColor ="#c1c0c0";
-		var t=setTimeout("resetWhiteBackground()",200);
-	} else {
-		for(var k = 0; k<blackKeyValues.length; k++){
-			if(e.charCode === blackKeyValues[k]){
-				color = 2;
-				position = k;
-				break;
-			}
-		} 
-	}
-	
-	if(color ==2) {
-		soundsBlack[position].playclip();
-		blackEl[position].style.backgroundColor ="#3d3b3b";
-		var t=setTimeout("resetBlackBackground()",200);
-	}
+});
+
+function getNoteFromEvent(e) {
+  var key = String.fromCharCode(e.which).toLowerCase();
+  if (e.which == 186) {
+    key = ';'
+  }
+  return keyBindings[key];
 }
 
-function resetWhiteBackground(){
-	whiteEl[position].style.backgroundColor = "white";
-	whiteEl[position].onmouseover = function(){
-		this.style.backgroundColor = "#c1c0c0";
-	} 
-	whiteEl[position].onmouseout = function(){
-		this.style.backgroundColor = "white";
-	} 
-}
-
-function resetBlackBackground(){
-	blackEl[position].style.backgroundColor = "black";
-	blackEl[position].onmouseover = function(){
-		this.style.backgroundColor = "#3d3b3b";
-	} 
-	blackEl[position].onmouseout = function(){
-		this.style.backgroundColor = "black";
-	} 
+function handleNoteHit(note) {
+  note.sound.playclip();
+  console.log('emitting ' + note.note);
+  socket.emit('note', {note: note.note});
 }
 
 });
