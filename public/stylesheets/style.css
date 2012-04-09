@@ -25,7 +25,7 @@ a {
   border-bottom:3px outset;
 }
 
-.wkey:hover{
+.wkey:hover, .wkey.keydown{
   background-color:#c1c0c0;
 }
 
@@ -43,7 +43,7 @@ a {
   margin-right:30px;
 }
 
-.bkey:hover{
+.bkey:hover, .bkey.keydown{
   background-color:#3d3b3b;
 }
 

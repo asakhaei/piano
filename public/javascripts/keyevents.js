@@ -1,80 +1,79 @@
-
-
-
 // Mouseover/ Click sound effect- by JavaScript Kit (www.javascriptkit.com)
 // Visit JavaScript Kit at http://www.javascriptkit.com/ for full source code
 
 //** Usage: Instantiate script by calling: var uniquevar=createsoundbite("soundfile1", "fallbackfile2", "fallebacksound3", etc)
 //** Call: uniquevar.playclip() to play sound
-
+$(function() {
 var html5_audiotypes={ //define list of audio file extensions and their associated audio types. Add to it if your specified audio file isn't on this list:
 	"mp3": "audio/mpeg",
 	"mp4": "audio/mp4",
 	"ogg": "audio/ogg",
 	"wav": "audio/wav"
-}
+};
 
 function createsoundbite(sound){
-	var html5audio=document.createElement('audio')
+	var html5audio=document.createElement('audio');
 	if (html5audio.canPlayType){ //check support for HTML5 audio
 		for (var i=0; i<arguments.length; i++){
-			var sourceel=document.createElement('source')
-			sourceel.setAttribute('src', arguments[i])
+			var sourceel=document.createElement('source');
+			sourceel.setAttribute('src', arguments[i]);
 			if (arguments[i].match(/\.(\w+)$/i))
-				sourceel.setAttribute('type', html5_audiotypes[RegExp.$1])
-			html5audio.appendChild(sourceel)
+				sourceel.setAttribute('type', html5_audiotypes[RegExp.$1]);
+			html5audio.appendChild(sourceel);
 		}
-		html5audio.load()
+		html5audio.load();
 		html5audio.playclip=function(){
 			html5audio.pause();
 			html5audio.currentTime = 0;
 			html5audio.play();
-		}
-		return html5audio
-	}
-	else{
-		return {playclip:function(){throw new Error("Your browser doesn't support HTML5 audio unfortunately")}}
+		};
+		return html5audio;
+	} else {
+		return {
+      playclip: function() {
+        throw new Error("Your browser doesn't support HTML5 audio unfortunately");
+                }
+    };
 	}
 }
 
-//Initialize two sound clips with 1 fallback file each:
+function Note(note) {
+  this.note = note;
+}
 
+var notes4 = "c d e f g a b cs ds fs as bs".split(" ");
+var notes5 = "c d e cs ds".split(" ");
+notes4 = notes4.map(function(elt) {
+    return elt + "4";
+});
+notes5 = notes5.map(function(elt) {
+    return elt + "5";
+});
+var noteNames = notes4.concat(notes5);
+var notes = {};
+var keyBindings = {};
+noteNames.forEach(function(note) {
+    noteObj = new Note(note);
+    noteObj.sound = createsoundbite("/piano notes/" + note + ".mp3");
+    notes[note] = noteObj;
+});
 
-var soundsWhite = new Array(createsoundbite("/piano notes/c4.mp3"),
-				createsoundbite("/piano notes/d4.mp3"),
-				createsoundbite("/piano notes/e4.mp3"),
-				createsoundbite("/piano notes/f4.mp3"),
-				createsoundbite("/piano notes/g4.mp3"),
-				createsoundbite("/piano notes/a4.mp3"),
-				createsoundbite("/piano notes/b4.mp3"),
-				createsoundbite("/piano notes/c5.mp3"),
-				createsoundbite("/piano notes/d5.mp3"),
-				createsoundbite("/piano notes/e5.mp3")
-);
+var keys = [97,115,100,102,103,104,106,107,108,59,119,101,116,121,117,111,112];
+keys.forEach(function(key, index) {
+    keyBindings[key] = notes[noteNames[index]];
+});
 
-var soundsBlack = new Array(createsoundbite("/piano notes/cs4.mp3"),
-				createsoundbite("/piano notes/ds4.mp3"),
-				createsoundbite("/piano notes/fs4.mp3"),
-				createsoundbite("/piano notes/gs4.mp3"),
-				createsoundbite("/piano notes/as4.mp3"),
-				createsoundbite("/piano notes/cs5.mp3"),
-				createsoundbite("/piano notes/ds5.mp3")
-);
-var whiteKeyValues = new Array(97,115,100,102,103,104,106,107,108,59);
-var blackKeyValues = new Array(119,101,116,121,117,111,112);
 var whiteEl = document.getElementsByClassName("wkey");
 var blackEl = document.getElementsByClassName("bkey");
 var position = 0;
-document.onkeypress=function(e){
+document.onkeydown=function(e){
 	var e=window.event || e
 	var color = 0;
-	for(var k = 0; k<whiteKeyValues.length; k++){
-		if(e.charCode === whiteKeyValues[k]){
-			color = 1;
-			position = k;
-			break;
-		}
-	}
+  if(keyBindings(e.charCode)){
+    color = 1;
+    position = k;
+    break;
+  }
 	if(color == 1) {
 		soundsWhite[position].playclip();
 		whiteEl[position].style.backgroundColor ="#c1c0c0";
@@ -116,3 +115,4 @@ function resetBlackBackground(){
 	} 
 }
 
+});
