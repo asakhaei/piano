@@ -11,15 +11,15 @@ var keyBindings = {}; // map of keys to notes, e.g. {'a': {...},...}
 var noteDivs = {}; // map of note names to divs representing the keys
 var socket = io.connect();
 
-$(".wkey").addClass("key");
-$(".bkey").addClass("key");
-$(".key").each(function(index, key) {
+$(".wkey").each(initKey);
+$(".bkey").each(initKey);
+function initKey(index, key) {
   key.note = $(key).attr('id');
   noteDivs[key.note] = $(key);
   $(key).click(function(e) {
     handleNoteHit(notes[this.note]);
   });
-});
+}
 
 socket.on('note', function(msg) {
   console.log('received ' + msg.note);
@@ -95,8 +95,8 @@ $("body").keyup(function(e) {
 $("body").keydown(function(e) {
   var note = getNoteFromEvent(e);
   if (note) {
-    handleNoteHit(note);
 		noteDivs[note.note].addClass("keydown");
+    handleNoteHit(note);
   }
 });
 
@@ -109,9 +109,9 @@ function getNoteFromEvent(e) {
 }
 
 function handleNoteHit(note) {
-  note.sound.playclip();
   console.log('emitting ' + note.note);
   socket.emit('note', {note: note.note});
+  note.sound.playclip();
 }
 
 });
