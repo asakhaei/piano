@@ -9,6 +9,9 @@ var express = require('express')
 var app = module.exports = express.createServer()
   , io = require('socket.io').listen(app);
 
+// Reduce the log verbosity
+io.set('log level', 1);
+
 // Configuration
 
 app.configure(function(){

@@ -8,13 +8,14 @@ $(function() {
 // Local variables
 var notes = {}; // map of note names to notes, e.g. {c4: {...}, d4: {...},...}
 var keyBindings = {}; // map of keys to notes, e.g. {'a': {...},...}
-var server = "http://localhost";
-var socket = io.connect(server);
+var noteDivs = {}; // map of note names to divs representing the keys
+var socket = io.connect();
 
 $(".wkey").addClass("key");
 $(".bkey").addClass("key");
 $(".key").each(function(index, key) {
   key.note = $(key).attr('id');
+  noteDivs[key.note] = $(key);
   $(key).click(function(e) {
     handleNoteHit(notes[this.note]);
   });
@@ -87,7 +88,7 @@ keys.forEach(function(key, index) {
 $("body").keyup(function(e) {
   var note = getNoteFromEvent(e);
   if(note){
-    $("#"+note.note).removeClass("keydown");
+    noteDivs[note.note].removeClass("keydown");
 	}
 });
 
@@ -95,7 +96,7 @@ $("body").keydown(function(e) {
   var note = getNoteFromEvent(e);
   if (note) {
     handleNoteHit(note);
-		$("#"+note.note).addClass("keydown");
+		noteDivs[note.note].addClass("keydown");
   }
 });
 
