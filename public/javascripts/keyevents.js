@@ -10,6 +10,16 @@ var notes = {}; // map of note names to notes, e.g. {c4: {...}, d4: {...},...}
 var keyBindings = {}; // map of keys to notes, e.g. {'a': {...},...}
 var noteDivs = {}; // map of note names to divs representing the keys
 var socket = io.connect();
+var singlePlayer = false;
+$("#playmode").click(function(e) {
+	if(singlePlayer){
+		singlePlayer = false;
+		$("#playmode").val('Single Player');
+	} else {
+		singlePlayer = true;
+		$("#playmode").val('Multi Player');
+	}
+});
 
 $(".wkey").each(initKey);
 $(".bkey").each(initKey);
@@ -23,30 +33,21 @@ function initKey(index, key) {
     handleNoteEnd(notes[this.note]);
   });
 }
-var notename ;
-var remote = false;
 
 socket.on('note', function(msg) {
-  console.log('received ' + msg.note);
-  notes[msg.note].sound.playclip();
-  noteDivs[msg.note].addClass("remotepressed");
-	//setInterval(changeClass,200);
-				
-  
+	if(!singlePlayer){
+		console.log('received ' + msg.note);
+		notes[msg.note].sound.playclip();
+		noteDivs[msg.note].addClass("remotepressed");
+	}
 });
 
 socket.on('noteend', function(msg) {
-  console.log('received end ' + msg.note);
-  noteDivs[msg.note].removeClass("remotepressed");
-	//setInterval(changeClass,200);
-				
-  
+	if(!singlePlayer){
+		console.log('received end ' + msg.note);
+		noteDivs[msg.note].removeClass("remotepressed");
+	}
 });
-
-function changeClass(){
-	noteDivs[notename].removeClass("remotepressed")
-}
-
 
 
 var html5_audiotypes={ //define list of audio file extensions and their associated audio types. Add to it if your specified audio file isn't on this list:
@@ -119,7 +120,7 @@ $("body").keyup(function(e) {
 $("body").keydown(function(e) {
   var note = getNoteFromEvent(e);
   if (note) {
-		noteDivs[note.note].addClass("keydown");
+	noteDivs[note.note].addClass("keydown");
     handleNoteHit(note);
   }
 });
@@ -133,13 +134,17 @@ function getNoteFromEvent(e) {
 }
 
 function handleNoteHit(note) {
-  console.log('emitting ' + note.note);
-  socket.emit('note', {note: note.note});
-  note.sound.playclip();
+	if(!singlePlayer){
+		console.log('emitting ' + note.note);
+		socket.emit('note', {note: note.note});
+	}
+	note.sound.playclip();
 }
 
 function handleNoteEnd(note){
-	socket.emit('noteend', {note: note.note});
+	if(!singlePlayer){
+		socket.emit('noteend', {note: note.note});
+	}
 }
 
 });
