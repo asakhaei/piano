@@ -29,6 +29,11 @@ a {
   background-color:#c1c0c0;
 }
 
+.wkey.remotepressed{
+  background-color:#FFCCFF;
+
+}
+
 .bkey{
   background-color:black;
   width:40px;
@@ -45,6 +50,10 @@ a {
 
 .bkey:hover, .bkey.keydown{
   background-color:#3d3b3b;
+}
+
+.bkey.remotepressed{
+  background-color:#660000;
 }
 
 #blackkeys{

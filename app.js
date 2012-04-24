@@ -41,6 +41,9 @@ io.sockets.on('connection', function(socket) {
     console.log("got msg " + msg.note);
     socket.broadcast.emit('note', msg);
   });
+  socket.on('noteend', function(msg) {
+	socket.broadcast.emit('noteend', msg);
+  });
 });
 
 app.listen(6437);

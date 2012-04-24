@@ -16,15 +16,38 @@ $(".bkey").each(initKey);
 function initKey(index, key) {
   key.note = $(key).attr('id');
   noteDivs[key.note] = $(key);
-  $(key).click(function(e) {
+  $(key).mousedown(function(e) {
     handleNoteHit(notes[this.note]);
   });
+  $(key).mouseup(function(e) {
+    handleNoteEnd(notes[this.note]);
+  });
 }
+var notename ;
+var remote = false;
 
 socket.on('note', function(msg) {
   console.log('received ' + msg.note);
   notes[msg.note].sound.playclip();
+  noteDivs[msg.note].addClass("remotepressed");
+	//setInterval(changeClass,200);
+				
+  
 });
+
+socket.on('noteend', function(msg) {
+  console.log('received end ' + msg.note);
+  noteDivs[msg.note].removeClass("remotepressed");
+	//setInterval(changeClass,200);
+				
+  
+});
+
+function changeClass(){
+	noteDivs[notename].removeClass("remotepressed")
+}
+
+
 
 var html5_audiotypes={ //define list of audio file extensions and their associated audio types. Add to it if your specified audio file isn't on this list:
 	"mp3": "audio/mpeg",
@@ -72,7 +95,7 @@ notes5 = notes5.map(function(elt) {
     return elt + "5";
 });
 var noteNames = notes4.concat(notes5);
-noteNames.forEach(function(note) {
+	noteNames.forEach(function(note) {
     noteObj = new Note(note);
     noteObj.sound = createsoundbite("/piano notes/" + note + ".mp3");
     notes[note] = noteObj;
@@ -89,6 +112,7 @@ $("body").keyup(function(e) {
   var note = getNoteFromEvent(e);
   if(note){
     noteDivs[note.note].removeClass("keydown");
+	handleNoteEnd(note);
 	}
 });
 
@@ -112,6 +136,10 @@ function handleNoteHit(note) {
   console.log('emitting ' + note.note);
   socket.emit('note', {note: note.note});
   note.sound.playclip();
+}
+
+function handleNoteEnd(note){
+	socket.emit('noteend', {note: note.note});
 }
 
 });
