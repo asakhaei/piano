@@ -8,10 +8,9 @@ a {
 }
 
 #piano{
-  width:900px;
-  height:400px;
-  margin-left: auto;
-  margin-right: auto;
+  width: 780px;
+  height: 400px;
+  margin-left: 250px;
 }
 
 .wkey{
@@ -58,7 +57,7 @@ a {
 
 #blackkeys{
   position:absolute;
-  width:900px;
+  width:780px;
 }
 
 .blacks2{
@@ -76,11 +75,10 @@ a {
 
 
 #playmode {
-margin-left: 20px;
-margin-right: auto;
 width: 150px;
 color: maroon;
 font-size: 20px;
 margin-top: -370px;
 position: absolute;
+margin-left: 10px;
 }
