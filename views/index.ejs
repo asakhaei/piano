@@ -2,40 +2,8 @@
 
 <h1><%= title %></h1>
 
-<input type="submit" id = "playmode" value="Single Player">
+<input type="submit" id="playmode" value="Single Player">
 
-<div id="piano">
-    <div id="whitekeys">
-        <div class="wkey" id="c4"></div>
-        <div class="wkey" id="d4"></div>
-        <div class="wkey" id="e4"></div>
-        <div class="wkey" id="f4"></div>
-        <div class="wkey" id="g4"></div>
-        <div class="wkey" id="a4"></div>
-        <div class="wkey" id="b4"></div>
-        <div class="wkey" id="c5"></div>
-        <div class="wkey" id="d5"></div>
-        <div class="wkey" id="e5"></div>
-    </div>
-
-    <div id="blackkeys">
-        <div class="blacks2">
-            <div class="bkey" id="cs4"></div>
-            <div class="bkey" id="ds4"></div>
-        </div>
-        
-        <div class="blacks3">
-            <div class="bkey" id="fs4"></div>
-            <div class="bkey" id="gs4"></div>
-            <div class="bkey" id="as4"></div>
-        </div>
-        
-        <div class="blacks2">
-            <div class="bkey" id="cs5"></div>
-            <div class="bkey" id="ds5"></div>
-        </div>
-    </div>
-</div>
-
+<%- partial('piano') %>
 
 <script type="text/javascript" src="/javascripts/keyevents.js"></script>

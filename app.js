@@ -33,7 +33,6 @@ app.configure('production', function(){
 
 // Routes
 app.get('/', routes.index);
-app.get('/piano', routes.piano);
 
 // Sockets
 io.sockets.on('connection', function(socket) {
