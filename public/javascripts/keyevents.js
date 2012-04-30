@@ -39,7 +39,7 @@ socket.on('note', function(msg) {
 });
 
 socket.on('noteend', function(msg) {
-	if(!singleplayer()){
+	if(!singlePlayer()){
 		console.log('received end ' + msg.note);
 		noteDivs[msg.note].removeClass("remotepressed");
 	}
