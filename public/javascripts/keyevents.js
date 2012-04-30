@@ -10,16 +10,12 @@ var notes = {}; // map of note names to notes, e.g. {c4: {...}, d4: {...},...}
 var keyBindings = {}; // map of keys to notes, e.g. {'a': {...},...}
 var noteDivs = {}; // map of note names to divs representing the keys
 var socket = io.connect();
-var singlePlayer = false;
-$("#playmode").click(function(e) {
-	if(singlePlayer){
-		singlePlayer = false;
-		$("#playmode").val('Single Player');
-	} else {
-		singlePlayer = true;
-		$("#playmode").val('Multi Player');
-	}
-});
+var multiplayer = $("#multiplayer");
+
+$("#playmode").buttonset();
+function singlePlayer() {
+  return !multiplayer.attr("checked");
+}
 
 $(".wkey").each(initKey);
 $(".bkey").each(initKey);
@@ -35,7 +31,7 @@ function initKey(index, key) {
 }
 
 socket.on('note', function(msg) {
-	if(!singlePlayer){
+	if(!singlePlayer()){
 		console.log('received ' + msg.note);
 		notes[msg.note].sound.playclip();
 		noteDivs[msg.note].addClass("remotepressed");
@@ -43,7 +39,7 @@ socket.on('note', function(msg) {
 });
 
 socket.on('noteend', function(msg) {
-	if(!singlePlayer){
+	if(!singleplayer()){
 		console.log('received end ' + msg.note);
 		noteDivs[msg.note].removeClass("remotepressed");
 	}
@@ -134,7 +130,7 @@ function getNoteFromEvent(e) {
 }
 
 function handleNoteHit(note) {
-	if(!singlePlayer){
+	if(!singlePlayer()){
 		console.log('emitting ' + note.note);
 		socket.emit('note', {note: note.note});
 	}
@@ -142,7 +138,7 @@ function handleNoteHit(note) {
 }
 
 function handleNoteEnd(note){
-	if(!singlePlayer){
+	if(!singlePlayer()){
 		socket.emit('noteend', {note: note.note});
 	}
 }

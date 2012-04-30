@@ -2,7 +2,10 @@
 
 <h1><%= title %></h1>
 
-<input type="submit" id="playmode" value="Single Player">
+<div id="playmode">
+	<input type="radio" id="multiplayer" name="playmode" checked="checked"/><label for="multiplayer">Multiplayer</label>
+	<input type="radio" id="singleplayer" name="playmode" /><label for="singleplayer">Singleplayer</label>
+</div>
 
 <%- partial('piano') %>
 
