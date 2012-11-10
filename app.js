@@ -11,6 +11,11 @@ var app = module.exports = express.createServer()
 
 // Reduce the log verbosity
 io.set('log level', 1);
+// assuming io is the Socket.IO server object
+io.configure(function () { 
+  io.set("transports", ["xhr-polling"]); 
+  io.set("polling duration", 10); 
+});
 
 // Configuration
 
