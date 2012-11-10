@@ -50,6 +50,6 @@ io.sockets.on('connection', function(socket) {
   });
 });
 
-var port = process.env.port || 6437;
+var port = process.env.PORT || 6437;
 app.listen(port);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
