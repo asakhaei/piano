@@ -50,5 +50,5 @@ io.sockets.on('connection', function(socket) {
   });
 });
 
-app.listen(6437);
+app.listen(50132);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
